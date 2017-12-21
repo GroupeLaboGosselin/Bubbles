@@ -156,9 +156,3 @@ if ~strcmpi(padding,'none')
         end
     end
 end
-
-% Supporting function: Vectorize (useful when can't directly put '(:)')
-function y = vect(x)
-
-y = x(:);
-
