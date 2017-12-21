@@ -18,8 +18,7 @@ function [SCI, permSCI] = smoothCIs(CI,permCI,sigma,padding,conds)
 % kernel in each dimension (excluding conditions). Standard deviations can 
 % be 0 if the corresponding dimension is non-smooth. If the standard
 % deviation is the same across dimensions, sigma can be a scalar even for
-% >1D classification images. No sigma should be put for the conditions
-% dimension if there is one.
+% >1D classification images.
 %
 % PADDING is a string indicating the padding method to be applied. Padding 
 % can be 'none' (default), 'circular', 'replicate', or 'symmetric' (see 
@@ -68,6 +67,7 @@ if all(sigma==0)
     return
 end
 if conds, sigma = [sigma 0]; end % not smooth across condition dimension
+if numel(sigma~=0)>2, warning('Convolution with multidimensional arrays can be very slow'); end
 
 % Determine kernel size
 sigma2 = sigma(sigma~=0); % sigma without the zeros
