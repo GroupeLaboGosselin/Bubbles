@@ -33,6 +33,7 @@ function [CI, permCI] = makeCI(X2,y2,nPerm,condVec)
 %
 %
 % TO DO
+% Add possibility of multidimensional responses 
 % Add possibility of using sampling matrices as shown (with cut-off)
 % Add possibility of using permutations with resampling (bootstraps)
 % Add possibility of using other functions (e.g. regression, mutual info)
