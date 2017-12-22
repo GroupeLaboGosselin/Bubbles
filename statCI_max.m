@@ -2,19 +2,19 @@ function [sigPix, sigClus] = statCI_max(SCI,permSCI,smoothDims,tails,alpha_pix,c
 
 % STATCI_MAX finds thresholds and indices of significant pixels in a
 % classification image, accorging to a pixel- or cluster-level correction
-% base on the maximum statistic method (Holmes, 1996). Calls FIND_PERM_CLUS
-% and FIND_SIG_CLUS which do most of the job.
+% based on the maximum statistic method (Holmes, 1996). Calls 
+% FIND_PERM_CLUS and FIND_SIG_CLUS which do most of the job.
 %
 %
 % SCI is the observed smooth classification image.
 %
 % PERMSCI is the array of smooth permutation classification images.
 %
-% SMOOTHDIMS is a 1 x nDim vector indicating which vectors are smooth
+% SMOOTHDIMS is a 1 x nDim vector indicating which dimensions are smooth
 % (either with a 1 or with the size of the standard deviation).
 %
-% TAILS is a string indicating to which tail of the null distribution the
-% observed statistics should be compared. Can be 'left', 'right', or
+% TAILS is a string indicating to which tail(s) of the null distribution 
+% the observed statistics should be compared. Can be 'left', 'right', or
 % 'both' (default).
 %
 % ALPHA_PIX is the p-value at which to apply the pixel-level correction.
@@ -29,8 +29,9 @@ function [sigPix, sigClus] = statCI_max(SCI,permSCI,smoothDims,tails,alpha_pix,c
 % THRESH_CLUS in the primary cluster threshold. The cluster test requires
 % the choice of an arbitrary primary threshold: the test will then
 % determine what is the required size of a cluster (or summed value) above
-% this primary threshold for it to be significant. This can be a p-value or
-% a raw regression coefficient (see smooth classification image).
+% this primary threshold for it to be significant (at alpha_clus level). 
+% This can be a p-value or a raw regression coefficient (see smooth 
+% classification image).
 %
 % CONDS indicates the presence of conditions (as the last dimension of the
 % classification images). Can be either 0 (no conditions; default) or 1.
