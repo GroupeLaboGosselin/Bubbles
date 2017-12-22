@@ -50,7 +50,7 @@ function [sigPix, sigClus] = statCI_max(SCI,permSCI,smoothDims,tails,alpha_pix,c
 % the indices of the significant pixels.
 %
 %
-% (c) 2017 Laurent Caplette
+% Laurent Caplette, 2017
 
 
 % Defaults

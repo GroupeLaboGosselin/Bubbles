@@ -3,7 +3,7 @@ function clusVal = find_perm_clus(permSCI, smoothDims, clus_type, thresh_clus, c
 % FIND_PERM_CLUS finds max cluster values for each permutation. See
 % STATCI_MAX function documentation for details.
 %
-% (c) 2017 Laurent Caplette
+% Laurent Caplette, 2017
 
 % Parameters
 nPerm = size(permSCI,1);

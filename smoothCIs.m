@@ -35,7 +35,6 @@ function [SCI, permSCI] = smoothCIs(CI,permCI,sigma,padding,conds)
 % PERMSCI is an array of smoothed permutation classification images.
 %
 %
-% (c) 2017 Laurent Caplette & Frédéric Gosselin
 % Code written by Laurent Caplette, 2017
 % Some parts are based on code by Frédéric Gosselin
 

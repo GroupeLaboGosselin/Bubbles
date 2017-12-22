@@ -4,7 +4,7 @@ function ind = find_sig_clus(SCI, smoothDims, clus_type, thresh_clus, clusValThr
 % clusters, and returns the linear indices of the significant indices. See
 % STATCI_MAX function documentation for details.
 %
-% (c) 2017 Laurent Caplette
+% Laurent Caplette, 2017
 
 % Parameters
 nPred = size(SCI);
