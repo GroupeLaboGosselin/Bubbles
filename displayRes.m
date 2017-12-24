@@ -19,12 +19,14 @@ function [SCIpix, SCIclus] = displayRes(CIsize,sigPix,sigClus,displayOpt,mask)
 % significance value. Optional.
 %
 % SCIPIX is an image indicating which pixels are significant at the pixel 
-% level. Pixels can be 0 (not significant), 1 (significant at the upper
-% tail) or -1 (significant at the lower tail).
+% level. If significance is tested at one tail, pixels can be 0 or 1; if
+% significance is tested at both tails, pixels can be 0, -1 (significant at
+% the lower tail, or 1 (significant at the upper tail).
 %
 % SCICLUS is an image indicating which pixels are significant at the 
-% cluster level. Pixels can be 0 (not significant), 1 (significant at the 
-% upper tail) or -1 (significant at the lower tail).
+% cluster level. If significance is tested at one tail, pixels can be 0 or 
+% 1; if significance is tested at both tails, pixels can be 0, -1 
+% (significant at the lower tail, or 1 (significant at the upper tail).
 %
 %
 % Copyright (c) 2017 Laurent Caplette
@@ -46,44 +48,57 @@ function [SCIpix, SCIclus] = displayRes(CIsize,sigPix,sigClus,displayOpt,mask)
 nDims = sum(CIsize~=1);
 
 % Input checks
-if isempty(displayOpt), displayOpt = 1; end
+if ~exist('displayOpt','var') || isempty(displayOpt), displayOpt = 1; end
 if displayOpt~=0 && displayOpt~=1, error('displayOpt must be 0 or 1'); end
 displayOpt = logical(displayOpt);
 if nDims>3 && displayOpt, warning('Figures will not be displayed. Too many dimensions.'); end
 if ~exist('mask','var'), mask = true(CIsize); end
 
 % Pixel-level significance image
-SCIpix = zeros(1,prod(CIsize));
-if iscell(sigPix.ind)
-    SCIpix(sigPix.ind{1}) = -1;
-    SCIpix(sigPix.ind{2}) = 1;
-else
-    SCIpix(sigPix.ind) = 1;
+SCIpix = [];
+if exist('sigPix','var') && ~isempty(sigPix)
+    SCIpix = zeros(1,prod(CIsize));
+    if iscell(sigPix.ind)
+        SCIpix(sigPix.ind{1}) = -1;
+        SCIpix(sigPix.ind{2}) = 1;
+    else
+        SCIpix(sigPix.ind) = 1;
+    end
+    SCIpix = reshape(SCIpix, CIsize);
 end
-SCIpix = reshape(SCIpix, CIsize);
 
 % Cluster-level significance image
-SCIclus = zeros(1,prod(CIsize));
-if iscell(sigClus.ind)
-    SCIclus(sigClus.ind{1}) = -1;
-    SCIclus(sigClus.ind{2}) = 1;
-else
-    SCIclus(sigClus.ind) = 1;
+SCIclus = [];
+if exist('sigClus','var') && ~isempty(sigClus)
+    SCIclus = zeros(1,prod(CIsize));
+    if iscell(sigClus.ind)
+        SCIclus(sigClus.ind{1}) = -1;
+        SCIclus(sigClus.ind{2}) = 1;
+    else
+        SCIclus(sigClus.ind) = 1;
+    end
+    SCIclus = reshape(SCIclus, CIsize);
 end
-SCIclus = reshape(SCIclus, CIsize);
 
 % Display figures
 if nDims==2 && displayOpt
-    figure, imagesc(SCIpix.*mask), colorbar, title('Pixel test')
-    figure, imagesc(SCIclus.*mask), colorbar, title('Cluster test')
+    if ~isempty(SCIpix), figure, imagesc(SCIpix.*mask), colorbar, title('Pixel test'), end
+    if ~isempty(SCIclus), figure, imagesc(SCIclus.*mask), colorbar, title('Cluster test'), end
 elseif nDims==3 && displayOpt
-    SCIpix = permute(SCIpix, [find(CIsize~=min(CIsize)) find(CIsize==min(CIsize))]);
-    SCIclus = permute(SCIclus, [find(CIsize~=min(CIsize)) find(CIsize==min(CIsize))]);
-    for pred = 1:size(SCIpix,3)
-        figure, imagesc(SCIpix(:,:,pred).*mask(:,:,pred)), colorbar, title(sprintf('Pixel test, Predictor #%i of 3rd dimension', pred))
-        figure, imagesc(SCIclus(:,:,pred).*mask(:,:,pred)), colorbar, title(sprintf('Cluster test, Predictor #%i of 3rd dimension', pred))
-    end
+    order = [find(CIsize~=min(CIsize)) find(CIsize==min(CIsize))];
     [~, reverseOrder] = sort([find(CIsize~=min(CIsize)) find(CIsize==min(CIsize))]);
-    SCIpix = permute(SCIpix, reverseOrder);
-    SCIclus = permute(SCIclus, reverseOrder);
+    if ~isempty(SCIpix)
+        SCIpix = permute(SCIpix, order);
+        for pred = 1:size(SCIpix,3)
+            figure, imagesc(SCIpix(:,:,pred).*mask(:,:,pred)), colorbar, title(sprintf('Pixel test, Predictor #%i of 3rd dimension', pred))
+        end
+        SCIpix = permute(SCIpix, reverseOrder);
+    end
+    if ~isempty(SCIclus)
+        for pred = 1:size(SCIclus,3)
+            figure, imagesc(SCIclus(:,:,pred).*mask(:,:,pred)), colorbar, title(sprintf('Cluster test, Predictor #%i of 3rd dimension', pred))
+        end
+        SCIclus = permute(SCIclus, order);
+        SCIclus = permute(SCIclus, reverseOrder);
+    end
 end
