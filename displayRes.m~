@@ -7,10 +7,11 @@ function [SCIpix, SCIclus] = displayRes(CIsize,sigPix,sigClus,displayOpt,mask)
 % CISIZE is a vector representing the size of the classification image.
 %
 % SIGPIX is a structure obtained after a pixel test in STATCI_MAX or 
-% STATCI_RFT. Optional.
+% STATCI_RFT.
 %
 % SIGCLUS is a structure obtained after a cluster test in STATCI_MAX or 
-% STATCI_RFT. Optional.
+.
+% Optional.
 %
 % DISPLAYOPT is a boolean indicating whether to display figures or not.
 % Note than if the classification image contains 4 dimensions or more,
