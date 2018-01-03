@@ -80,7 +80,7 @@ if all(sigma==0)
     return
 end
 if conds, sigma = [sigma 0]; end % not smooth across condition dimension
-if numel(sigma~=0)>2, warning('Convolution with multidimensional arrays can be very slow'); end
+if numel(sigma(sigma~=0))>2, warning('Convolution with multidimensional arrays can be very slow'); end
 
 % Determine kernel size
 sigma2 = sigma(sigma~=0); % sigma without the zeros
