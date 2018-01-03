@@ -71,6 +71,7 @@ function ZCI = zscoreCI(SCI,conds,varargin)
 
 % Default
 if ~exist('conds','var') || isempty(conds), conds = 0; end
+if ~isscalar(conds), error('Conds must be 0 or 1'); end
 
 % Parameters
 nPred = size(SCI);
