@@ -11,7 +11,8 @@ function [sigPix, sigClus] = statCI_max(SCI,permSCI,smoothDims,tails,alpha_pix,c
 % PERMSCI is the array of smooth permutation classification images.
 %
 % SMOOTHDIMS is a 1 x nDim vector indicating which dimensions are smooth
-% (either with a 1 or with the size of the standard deviation).
+% (not necessarily in a Gaussian fashion; either with a 1 or with the size 
+% of the standard deviation).
 %
 % TAILS is a string indicating to which tail(s) of the null distribution 
 % the observed statistics should be compared. Can be 'left', 'right', or
