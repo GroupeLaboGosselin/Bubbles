@@ -68,7 +68,12 @@ function [sigPix, sigClus] = statCI_max(SCI,permSCI,smoothDims,tails,alpha_pix,c
 
 
 % Defaults
-if ~exist('c','var') || isempty(c), c = conndef(sum(smoothDims),'maximal'); end % maximal connectivity as default
+if ~exist('c','var') || isempty(c), 
+    if sum(smoothDims)==1
+        c = 8;
+    else
+        c = conndef(sum(smoothDims),'maximal'); end % maximal connectivity as default
+end
 if ~exist('conds','var') || isempty(conds), conds = 0; end
 if isempty(tails), tails = 'both'; end
 
