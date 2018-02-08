@@ -83,23 +83,32 @@ end
 
 % Display figures
 if nDims==2 && displayOpt
-    if ~isempty(SCIpix), figure, imagesc(SCIpix.*mask), colorbar, title('Pixel test'), end
-    if ~isempty(SCIclus), figure, imagesc(SCIclus.*mask), colorbar, title('Cluster test'), end
+    if ~isempty(SCIpix)
+        figure, imagesc(SCIpix.*mask), colorbar, title('Pixel test')
+        xlabel('Dimension #2'), ylabel('Dimension #1')
+    end
+    if ~isempty(SCIclus)
+        figure, imagesc(SCIclus.*mask), colorbar, title('Cluster test')
+        xlabel('Dimension #2'), ylabel('Dimension #1')
+    end
 elseif nDims==3 && displayOpt
-    order = [find(CIsize~=min(CIsize)) find(CIsize==min(CIsize))];
+    order = [find(CIsize~=min(CIsize)) find(CIsize==min(CIsize))]; % put smallest dimension last
     [~, reverseOrder] = sort([find(CIsize~=min(CIsize)) find(CIsize==min(CIsize))]);
+    mask = permute(mask, order);
     if ~isempty(SCIpix)
         SCIpix = permute(SCIpix, order);
         for pred = 1:size(SCIpix,3)
-            figure, imagesc(SCIpix(:,:,pred).*mask(:,:,pred)), colorbar, title(sprintf('Pixel test, Predictor #%i of 3rd dimension', pred))
+            figure, imagesc(SCIpix(:,:,pred).*mask(:,:,pred)), colorbar, title(sprintf('Pixel test, Predictor #%i of dimension #%i', pred, order(end)))
+            xlabel(sprintf('Dimension #%i', order(2))), ylabel(sprintf('Dimension #%i', order(1)))
         end
         SCIpix = permute(SCIpix, reverseOrder);
     end
     if ~isempty(SCIclus)
-        for pred = 1:size(SCIclus,3)
-            figure, imagesc(SCIclus(:,:,pred).*mask(:,:,pred)), colorbar, title(sprintf('Cluster test, Predictor #%i of 3rd dimension', pred))
-        end
         SCIclus = permute(SCIclus, order);
+        for pred = 1:size(SCIclus,3)
+            figure, imagesc(SCIclus(:,:,pred).*mask(:,:,pred)), colorbar, title(sprintf('Cluster test, Predictor #%i of dimension #%i', pred, order(end)))
+            xlabel(sprintf('Dimension #%i', order(2))), ylabel(sprintf('Dimension #%i', order(1)))
+        end
         SCIclus = permute(SCIclus, reverseOrder);
     end
 end
