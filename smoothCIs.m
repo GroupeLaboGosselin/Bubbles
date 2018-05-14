@@ -169,3 +169,9 @@ if ~strcmpi(padding,'none')
         end
     end
 end
+
+%%%%%%%%%%%%%%%%%%%%%
+
+function y = vect(x)
+
+y = x(:);

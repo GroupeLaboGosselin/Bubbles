@@ -1,5 +1,7 @@
 function [sigPix, sigClus] = statCI_max(SCI,permSCI,smoothDims,tails,alpha_pix,clus_type,alpha_clus,thresh_clus,conds,c,mask)
 
+% [sigPix, sigClus] = statCI_max(SCI,permSCI,smoothDims,tails,alpha_pix,clus_type,alpha_clus,thresh_clus,conds,c,mask)
+%
 % STATCI_MAX finds thresholds and indices of significant pixels in a
 % classification image, accorging to a pixel- or cluster-level correction
 % based on the maximum statistic method (Holmes, 1996). Calls 
@@ -40,7 +42,7 @@ function [sigPix, sigClus] = statCI_max(SCI,permSCI,smoothDims,tails,alpha_pix,c
 % C specifies the connectivity to be used in the computation of the
 % clusters (see bwlabel function documentation). Can be a scalar or an
 % array as returned by the function conndef. Default is
-% conndef(sum(smoothDims),'maximal).
+% conndef(sum(smoothDims),'maximal').
 %
 % MASK is an array indicating on which pixels to perform the computations.
 %
@@ -93,7 +95,7 @@ if conds~=0 && conds~=1, error('conds must be 0 or 1'); end
 if numel(smoothDims)~=nDimsNC, error('smoothDims size must be nb of dimensions'); end
 if conds, smoothDims = [smoothDims 0]; end % not smooth across conditions
 smoothDims = logical(smoothDims); % if sigmas are put, will transform them in 1s
-if nPerm<100, error('Too few permutations to use maximum statistic method'); end
+if nPerm<50, error('Too few permutations to use maximum statistic method'); end %%%%%
 if isscalar(thresh_clus) && abs(thresh_clus)<1
     if ~strcmpi(tails,'both') && nPerm<inv(thresh_clus)
         error('Not enough permutations for the chosen primary p-value')
@@ -120,12 +122,12 @@ iptcheckconn(c,'statCI_max','c',10) % check if c is valid (for nDims>1), using e
 % Transform p-value in coefficient if p-value is given as primary threshold, based on average data
 if nargout>1 && all(abs(thresh_clus)<1)
     if strcmpi(tails,'left')
-        thresh_clus = mean(quantile(permSCI(:,:),thresh_clus));
+        thresh_clus = nanmean(quantile(permSCI(:,:),thresh_clus));
     elseif strcmpi(tails,'right')
-        thresh_clus = mean(quantile(permSCI(:,:),1-thresh_clus));
+        thresh_clus = nanmean(quantile(permSCI(:,:),1-thresh_clus));
     else % both
-        thresh_clus(1) = mean(quantile(permSCI(:,:),thresh_clus(1)/2));
-        thresh_clus(2) = mean(quantile(permSCI(:,:),1-(thresh_clus(2)/2)));
+        thresh_clus(1) = nanmean(quantile(permSCI(:,:),thresh_clus(1)/2));
+        thresh_clus(2) = nanmean(quantile(permSCI(:,:),1-(thresh_clus(2)/2)));
     end
 end
 
