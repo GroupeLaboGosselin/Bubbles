@@ -92,7 +92,7 @@ if strcmpi(padding,'none')
     PCI = CI;
     permPCI = permCI;
 else % pad only dimensions to be smoothed
-    if nDims==1, % necessarily smooth
+    if nDims==1 % necessarily smooth
         PCI = padarray(CI, [nPred 0], padding);
     else
         PCI = padarray(CI, nPred.*(sigma~=0), padding); 
@@ -161,7 +161,7 @@ if ~strcmpi(padding,'none')
         S.subs = cell(1,nDims);
         for dim = 1:nDims, S.subs{dim} = nPad(dim)+1:nPad(dim)+nPred(dim); end
         SCI = subsref(SCI,S);
-        if ~isempty(permCI), 
+        if ~isempty(permCI) 
             S.subs = cell(1,nDims+1);
             S.subs{1} = ':';
             for dim = 2:nDims+1, S.subs{dim} = nPad(dim-1)+1:nPad(dim-1)+nPred(dim-1); end
