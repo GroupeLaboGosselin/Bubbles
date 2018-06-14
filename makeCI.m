@@ -62,11 +62,12 @@ if isempty(condVec), condVec = ones(size(y2)); end
 nPred = size(X2);
 nPred = nPred(2:end);
 nCond = length(unique(condVec));
+nTrl = size(X2,1);
 
 X2 = X2(:,:); % vectorize sampling dimensions of X
 nElem = size(X2,2);
 
-% Compute weighted sums
+% Compute weighted sums (averages)
 CI = zeros(nElem,nCond); 
 if nPerm~=0, permCI = zeros(nPerm,nElem,nCond); end % if 1 cond, dimension will disappear
 for cond = 1:nCond
@@ -80,6 +81,8 @@ for cond = 1:nCond
         end
     end 
 end
+CI = CI./nTrl; % divide by nb of trials (obtained coeffs are Pearson corr coeffs)
+permCI = permCI./nTrl; % divide by nb of trials (obtained coeffs are Pearson corr coeffs)
 
 % Reshape classification images
 CI = reshape(CI,[nPred nCond]);
