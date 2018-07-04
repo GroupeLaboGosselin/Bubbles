@@ -38,7 +38,7 @@ tvar = SCI>thresh_clus; % thresholded array
 
 % Find significant clusters
 SCI_sig = false(prod(nPredS),nElemNS);
-for pred = 1:nElemNS
+parfor pred = 1:nElemNS
     temp = reshape(tvar(:,pred), nPredS);
     SCI_temp = reshape(SCI(:,pred), nPredS);
     [L,n] = bwlabeln(temp,c);

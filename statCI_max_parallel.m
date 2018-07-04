@@ -1,11 +1,12 @@
-function [sigPix, sigClus] = statCI_max(SCI,permSCI,smoothDims,tails,alpha_pix,clus_type,alpha_clus,thresh_clus,conds,c,mask)
+function [sigPix, sigClus] = statCI_max_parallel(SCI,permSCI,smoothDims,tails,alpha_pix,clus_type,alpha_clus,thresh_clus,conds,c,mask)
 
-% [sigPix, sigClus] = statCI_max(SCI,permSCI,smoothDims,tails,alpha_pix,clus_type,alpha_clus,thresh_clus,conds,c,mask)
+% [sigPix, sigClus] = statCI_max_parallel(SCI,permSCI,smoothDims,tails,alpha_pix,clus_type,alpha_clus,thresh_clus,conds,c,mask)
 %
-% STATCI_MAX finds thresholds and indices of significant pixels in a
-% classification image, accorging to a pixel- or cluster-level correction
-% based on the maximum statistic method (Holmes, 1996). Calls 
-% FIND_PERM_CLUS and FIND_SIG_CLUS which do most of the job.
+% STATCI_MAX_PARALLEL finds thresholds and indices of significant pixels in 
+% a classification image, accorging to a pixel- or cluster-level correction
+% based on the maximum statistic method (Holmes, 1996). 
+% Parallel implementation (requires Parallel Processing Toolbox). 
+% Calls FIND_PERM_CLUS_PARALLEL and FIND_SIG_CLUS which do most of the job.
 %
 %
 % SCI is the observed smooth classification image.
@@ -159,19 +160,19 @@ end
 % Cluster test
 if nargout>1
     if strcmpi(tails,'left')
-        clusVal = find_perm_clus(-permSCI, smoothDims, clus_type, abs(thresh_clus), c);
+        clusVal = find_perm_clus_parallel(-permSCI, smoothDims, clus_type, abs(thresh_clus), c);
         sigClus.thresh = quantile(clusVal, 1-alpha_clus);
         sigClus.ind = find_sig_clus(-SCI, smoothDims, clus_type, abs(thresh_clus), sigClus.thresh, c);
         sigClus.thresh = -sigClus.thresh;
     elseif strcmpi(tails,'right')
-        clusVal = find_perm_clus(permSCI, smoothDims, clus_type, abs(thresh_clus), c);
+        clusVal = find_perm_clus_parallel(permSCI, smoothDims, clus_type, abs(thresh_clus), c);
         sigClus.thresh = quantile(clusVal, 1-alpha_clus);
         sigClus.ind = find_sig_clus(SCI, smoothDims, clus_type, abs(thresh_clus), sigClus.thresh, c);
     else % both
-        clusVal = find_perm_clus(-permSCI, smoothDims, clus_type, abs(thresh_clus(1)), c);
+        clusVal = find_perm_clus_parallel(-permSCI, smoothDims, clus_type, abs(thresh_clus(1)), c);
         sigClus.thresh(1) = quantile(clusVal, 1-(alpha_clus/2));
         sigClus.ind{1} = find_sig_clus(-SCI, smoothDims, clus_type, abs(thresh_clus(1)), sigClus.thresh(1), c);
-        clusVal = find_perm_clus(permSCI, smoothDims, clus_type, abs(thresh_clus(2)), c);
+        clusVal = find_perm_clus_parallel(permSCI, smoothDims, clus_type, abs(thresh_clus(2)), c);
         sigClus.thresh(2) = quantile(clusVal, 1-(alpha_clus/2));
         sigClus.ind{2} = find_sig_clus(SCI, smoothDims, clus_type, abs(thresh_clus(2)), sigClus.thresh(2), c);
         if strcmpi(clus_type,'sum'), sigClus.thresh = [-1 1] .* sigClus.thresh; end
