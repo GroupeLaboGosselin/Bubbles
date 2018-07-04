@@ -3,14 +3,16 @@ function [X2,y2,condVec2] = preprocess(X,y,XNorm,yNorm,selectionAbs,selectionStd
 % PREPROCESS will standardize sampling arrays and responses, and select
 % trials according to given criteria.
 %
-% X is the raw sampling array. The first dimension should be the trials,
-% and following dimensions should be sampling dimensions.
+% X is the raw sampling array (preferably not smoothed). The first 
+% dimension should be the trials,and following dimensions should be 
+% sampling dimensions.
 %
 % y is a 1 x nTrials vector of responses (e.g. -1 and 1 for accuracy).
 %
 % XNorm is a boolean indicating whether or not to standardize predictors
-% within each trial (default: true). Highly recommended if a variable
-% number of bubbles across trials is used.
+% within each trial (default: false). Not recommended because negative values
+% become uninterpretable (and further analysis is faster with logical
+% arrays than integer arrays).
 %
 % yNorm is a boolean indicating whether or not to standardize responses
 % (default: true). If there is no standardization, responses should still
@@ -64,9 +66,10 @@ function [X2,y2,condVec2] = preprocess(X,y,XNorm,yNorm,selectionAbs,selectionStd
 % Make it possible to have multidimensional response variables
 % Add possibility of transforming response variable (median, quantile)
 % Add possibility of padding X, given prop, if natural padding is lost
+% Could implement X norm within each predictor although not recommended
 
 % Defaults
-if isempty(XNorm), XNorm = true; end
+if isempty(XNorm), XNorm = false; end
 if isempty(yNorm), yNorm = true; end
 if isempty(selectionAbs), selectionAbs = [NaN NaN]; end
 if isempty(selectionStd), selectionStd = [NaN NaN]; end
